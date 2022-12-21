@@ -3,10 +3,12 @@ package com.example.finalprojectsujin221220.dto;
 
 import com.example.finalprojectsujin221220.domain.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
+@Builder
 public class UserJoinRequest {
 
     private String userName;
