@@ -28,7 +28,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //security
-//    implementation 'org.springframework.security:spring-security-test:5.7.3'
+    implementation 'org.springframework.security:spring-security-test:5.7.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // swagger dependency
