@@ -2,6 +2,7 @@ package com.example.finalprojectsujin221220.controller;
 
 import com.example.finalprojectsujin221220.dto.UserDto;
 import com.example.finalprojectsujin221220.dto.UserJoinRequest;
+import com.example.finalprojectsujin221220.dto.UserLoginRequest;
 import com.example.finalprojectsujin221220.exception.ApplicationException;
 import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -71,6 +73,56 @@ class UserControllerTest {
                         .content(objtMpr.writeValueAsBytes(userJoinRequest)))
                 .andDo(print())
                 .andExpect(status().isConflict());
+    }
+
+    UserLoginRequest userLoginRequest = UserLoginRequest.builder()
+            .userName("sujin")
+            .password("pass123")
+            .build();
+
+    @Test
+    @DisplayName("로그인 성공")
+    @WithMockUser
+    void login_success() throws Exception {
+
+        when(us.login(any(), any())).thenReturn("token");
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objtMpr.writeValueAsBytes(userLoginRequest)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - userName 없음")
+    @WithMockUser
+    void login_fail1() throws Exception {
+
+        when(us.login(any(), any())).thenThrow(new ApplicationException(ErrorCode.NOT_FOUND_USER_NAME, ErrorCode.NOT_FOUND_USER_NAME.getMessage()));
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objtMpr.writeValueAsBytes(userJoinRequest)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - password 틀림")
+    @WithAnonymousUser
+    void login_fail2() throws Exception {
+
+        when(us.login(any(), any())).thenThrow(new ApplicationException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objtMpr.writeValueAsBytes(userLoginRequest)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
 
