@@ -7,6 +7,7 @@ import com.example.finalprojectsujin221220.exception.ApplicationException;
 import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository ur;
-//    private final BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
 
 
     public UserDto join(UserJoinRequest dto) {
@@ -28,7 +29,7 @@ public class UserService {
                             ErrorCode.DUPLICATED_USER_NAME.getMessage());
                 });
 
-        User savedUser = ur.save(dto.toEntity(dto.getPassword()));
+        User savedUser = ur.save(dto.toEntity(encoder.encode(dto.getPassword())));
 
         return UserDto.builder()
                 .id(savedUser.getId())
