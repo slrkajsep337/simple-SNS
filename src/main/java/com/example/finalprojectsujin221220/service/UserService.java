@@ -3,6 +3,8 @@ package com.example.finalprojectsujin221220.service;
 import com.example.finalprojectsujin221220.domain.entity.User;
 import com.example.finalprojectsujin221220.dto.UserDto;
 import com.example.finalprojectsujin221220.dto.UserJoinRequest;
+import com.example.finalprojectsujin221220.exception.ApplicationException;
+import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,16 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository ur;
+//    private final BCryptPasswordEncoder encoder;
+
 
     public UserDto join(UserJoinRequest dto) {
 
         //userName 중복 -> 예외처리
         ur.findByUserName(dto.getUserName())
                 .ifPresent(user -> {
-                    throw new RuntimeException();
+                    throw new ApplicationException(ErrorCode.DUPLICATED_USER_NAME,
+                            ErrorCode.DUPLICATED_USER_NAME.getMessage());
                 });
 
         User savedUser = ur.save(dto.toEntity(dto.getPassword()));
