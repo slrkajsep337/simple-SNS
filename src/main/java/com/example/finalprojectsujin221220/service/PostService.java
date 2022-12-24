@@ -10,6 +10,7 @@ import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -26,8 +27,8 @@ public class PostService {
                 .title(dto.getTitle())
                 .body(dto.getBody())
                 .userName(dto.getUserName())
-                .createdAt(dto.getCreatedAt())
-                .lastModifiedAt(dto.getLastModifiedAt())
+                .createdAt(LocalDateTime.now())
+                .lastModifiedAt(LocalDateTime.now())
                 .user(userOpt.get())
                 .build();
 
@@ -36,8 +37,8 @@ public class PostService {
                 .title(savedPost.getTitle())
                 .body(savedPost.getBody())
                 .userName(savedPost.getUserName())
-                .createdAt(savedPost.getCreatedAt())
-                .lastModifiedAt(savedPost.getLastModifiedAt())
+                .createdAt(LocalDateTime.now())
+                .lastModifiedAt(LocalDateTime.now())
                 .message("게시물 등록이 성공했습니다")
                 .build();
     }
