@@ -39,7 +39,7 @@ public class UserService {
         User savedUser = ur.save(dto.toEntity(encoder.encode(dto.getPassword())));
 
         return UserDto.builder()
-                .id(savedUser.getId())
+                .id(savedUser.getUserId())
                 .userName(savedUser.getUserName())
                 .build();
     }
