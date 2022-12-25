@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 public class PostCreateRequest {
 
-    private Long userId;
-
     private String title;
     private String body;
 

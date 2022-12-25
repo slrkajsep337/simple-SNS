@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class UserDto { //꼭 필요한지? ..
+public class UserDto {
 
-    private Long id;
+    private Long userId;
     private String userName;
     private String password;
 
