@@ -6,6 +6,7 @@ import com.example.finalprojectsujin221220.domain.entity.Post;
 import com.example.finalprojectsujin221220.domain.entity.User;
 import com.example.finalprojectsujin221220.dto.PostCreateRequest;
 import com.example.finalprojectsujin221220.dto.PostCreateResponse;
+import com.example.finalprojectsujin221220.dto.PostDetailsResponse;
 import com.example.finalprojectsujin221220.repository.PostRepository;
 import com.example.finalprojectsujin221220.repository.UserRepository;
 import com.example.finalprojectsujin221220.utils.JwtUtil;
@@ -42,6 +43,20 @@ public class PostService {
                 .message("포스트 등록 완료")
                 .postId(savedPost.getPostId())
                 .build();
+    }
+
+    public PostDetailsResponse showOnePost(Long id) {
+        Optional<Post> postOpt = pr.findById(id);
+
+        return PostDetailsResponse.builder()
+                .id(postOpt.get().getPostId())
+                .title(postOpt.get().getTitle())
+                .body(postOpt.get().getBody())
+                .userName(postOpt.get().getUserName())
+                .createdAt(postOpt.get().getCreatedAt())
+                .LastModifiedAt(postOpt.get().getLastModifiedAt())
+                .build();
+
     }
 
 }
