@@ -13,11 +13,5 @@ public class PostCreateRequest {
 
     private String title;
     private String body;
-    private String userName;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
-
-
 
 }
