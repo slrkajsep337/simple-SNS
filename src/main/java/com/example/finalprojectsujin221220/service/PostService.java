@@ -27,7 +27,7 @@ public class PostService {
 
     public PostCreateResponse newPost(PostCreateRequest dto, Authentication authentication) {
 
-        Optional<User> userOpt = ur.findById(dto.getUserId());
+        Optional<User> userOpt = ur.findByUserName(authentication.getName());
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .body(dto.getBody())
@@ -39,12 +39,8 @@ public class PostService {
 
         Post savedPost = pr.save(post);
         return PostCreateResponse.builder()
-                .title(savedPost.getTitle())
-                .body(savedPost.getBody())
-                .userName(authentication.getName())
-                .createdAt(LocalDateTime.now())
-                .lastModifiedAt(LocalDateTime.now())
-                .message("게시물 등록이 성공했습니다")
+                .message("포스트 등록 완료")
+                .postId(savedPost.getPostId())
                 .build();
     }
 

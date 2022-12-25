@@ -1,5 +1,6 @@
 package com.example.finalprojectsujin221220.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,13 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 public class PostCreateResponse {
 
-    private String title;
-    private String body;
-    private String userName;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
-
     private String message;
+    private Long postId;
 
 }

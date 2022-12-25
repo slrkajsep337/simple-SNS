@@ -19,7 +19,7 @@ public class UserController {
     @ResponseBody
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest dto) {
         UserDto ud = us.join(dto);
-        return Response.success(new UserJoinResponse(ud.getUserName()));
+        return Response.success(new UserJoinResponse(ud.getUserId(), ud.getUserName()));
     }
 
     @PostMapping("/login")
