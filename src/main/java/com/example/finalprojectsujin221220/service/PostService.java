@@ -45,18 +45,18 @@ public class PostService {
                 .build();
     }
 
-//    public PostDetailsResponse showOnePost(Long id) {
-//        Optional<Post> postOpt = pr.findById(id);
-//
-//        return PostDetailsResponse.builder()
-//                .id(postOpt.get().getPostId())
-//                .title(postOpt.get().getTitle())
-//                .body(postOpt.get().getBody())
-//                .userName(postOpt.get().getUserName())
-//                .createdAt(postOpt.get().getCreatedAt())
-//                .LastModifiedAt(postOpt.get().getLastModifiedAt())
-//                .build();
-//
-//    }
+    public PostDetailsResponse showOnePost(Long id) {
+        Optional<Post> postOpt = pr.findById(id);
+
+        return PostDetailsResponse.builder()
+                .id(postOpt.get().getPostId())
+                .title(postOpt.get().getTitle())
+                .body(postOpt.get().getBody())
+                .userName(postOpt.get().getUserName())
+                .createdAt(postOpt.get().getCreatedAt())
+                .LastModifiedAt(postOpt.get().getLastModifiedAt())
+                .build();
+
+    }
 
 }
