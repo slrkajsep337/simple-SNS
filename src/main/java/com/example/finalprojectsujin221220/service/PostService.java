@@ -90,5 +90,20 @@ public class PostService {
     }
 
 
+    public PostDeleteResponse deletePost(Long postId, Authentication authentication) {
+        User user = ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        Post post = pr.findById(postId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
+        if(!post.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+
+        pr.delete(post);
+
+        return PostDeleteResponse.builder()
+                .message("포스트 삭제 완료")
+                .postId(post.getPostId())
+                .build();
+
+    }
 }

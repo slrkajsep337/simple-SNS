@@ -42,4 +42,10 @@ public class PostController {
         return Response.success(ps.modifyPost(id, dto, authentication));
     }
 
+//    @DeleteMapping("/{id")
+    @RequestMapping(value ="/{id}", method = RequestMethod.DELETE)
+    public Response deletePost(@PathVariable Long id, Authentication authentication) {
+        return Response.success(ps.deletePost(id, authentication));
+    }
+
 }
