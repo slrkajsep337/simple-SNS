@@ -3,12 +3,13 @@ package com.example.finalprojectsujin221220.service;
 
 import com.example.finalprojectsujin221220.domain.entity.Post;
 import com.example.finalprojectsujin221220.domain.entity.User;
-import com.example.finalprojectsujin221220.dto.PostCreateRequest;
-import com.example.finalprojectsujin221220.dto.PostCreateResponse;
-import com.example.finalprojectsujin221220.dto.PostDetailsResponse;
+import com.example.finalprojectsujin221220.dto.*;
+import com.example.finalprojectsujin221220.exception.ApplicationException;
+import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.PostRepository;
 import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -21,11 +22,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class PostService {
 
     private final UserRepository ur;
     private final PostRepository pr;
-
 
 
     public PostCreateResponse newPost(PostCreateRequest dto, Authentication authentication) {
@@ -58,7 +59,6 @@ public class PostService {
                 .createdAt(postOpt.get().getCreatedAt())
                 .LastModifiedAt(postOpt.get().getLastModifiedAt())
                 .build();
-
     }
 
     public List<PostDetailsResponse> showPosts(Pageable pageable) {
@@ -67,6 +67,28 @@ public class PostService {
                 .map(post -> Post.of(post)).collect(Collectors.toList());
         return postResponses;
     }
+
+    public PostModifyResponse modifyPost(Long postId, PostModifyRequest dto, Authentication authentication) {
+        User user = ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        Post post = pr.findById(postId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+
+        if( !post.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+
+        post.setTitle(dto.getTitle());
+        post.setBody(dto.getBody());
+        post.setLastModifiedAt(LocalDateTime.now());
+
+        Post savedPost = pr.save(post);
+
+        return PostModifyResponse.builder()
+                .message("포스트 수정 완료")
+                .postId(savedPost.getPostId())
+                .build();
+    }
+
 
 
 }

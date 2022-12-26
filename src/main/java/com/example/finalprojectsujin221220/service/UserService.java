@@ -49,8 +49,8 @@ public class UserService {
         //username 존재 확인
         User user = ur.findByUserName(userName)
                 .orElseThrow(() -> {
-                    throw new ApplicationException(ErrorCode.NOT_FOUND_USER_NAME,
-                ErrorCode.NOT_FOUND_USER_NAME.getMessage());
+                    throw new ApplicationException(ErrorCode.USERNAME_NOT_FOUND,
+                ErrorCode.USERNAME_NOT_FOUND.getMessage());
     });
 
         //password 일치 확인

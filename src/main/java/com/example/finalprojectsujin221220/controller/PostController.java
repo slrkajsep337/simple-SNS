@@ -37,4 +37,9 @@ public class PostController {
         return Response.success(ps.showPosts(pageable));
     }
 
+    @PutMapping("/{id}")
+    public Response<PostModifyResponse> modifyPost(@PathVariable Long id, @RequestBody PostModifyRequest dto, Authentication authentication) {
+        return Response.success(ps.modifyPost(id, dto, authentication));
+    }
+
 }
