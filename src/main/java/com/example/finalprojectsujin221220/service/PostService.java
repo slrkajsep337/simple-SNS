@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -58,5 +60,13 @@ public class PostService {
                 .build();
 
     }
+
+    public List<PostDetailsResponse> showPosts(Pageable pageable) {
+        Page<Post> posts = pr.findAll(pageable);
+        List<PostDetailsResponse> postResponses = posts.stream()
+                .map(post -> Post.of(post)).collect(Collectors.toList());
+        return postResponses;
+    }
+
 
 }
