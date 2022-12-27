@@ -40,7 +40,7 @@ public class Post {
                 .body(post.getBody())
                 .userName(post.getUserName())
                 .createdAt(post.getCreatedAt())
-                .LastModifiedAt(post.getLastModifiedAt())
+                .lastModifiedAt(post.getLastModifiedAt())
                 .build();
     }
 
