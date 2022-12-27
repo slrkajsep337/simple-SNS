@@ -57,7 +57,7 @@ public class PostService {
                 .body(postOpt.get().getBody())
                 .userName(postOpt.get().getUserName())
                 .createdAt(postOpt.get().getCreatedAt())
-                .LastModifiedAt(postOpt.get().getLastModifiedAt())
+                .lastModifiedAt(postOpt.get().getLastModifiedAt())
                 .build();
     }
 
