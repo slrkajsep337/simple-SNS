@@ -8,7 +8,7 @@ public class HelloController {
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String hello() {
-        return "happy_new_year";
+        return "이수진";
     }
 
 
