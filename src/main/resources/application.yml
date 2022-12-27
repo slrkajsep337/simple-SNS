@@ -6,8 +6,13 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    hiddenmethod:
+      filter:
+        enabled: true
+
   jpa:
     show-sql: true
     database-platform:
     database:
     hibernate.ddl-auto: update
+
