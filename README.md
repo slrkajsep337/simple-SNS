@@ -6,19 +6,139 @@
 ## 🔍 Swagger
 http://ec2-3-34-195-196.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 
-<img scr="/uploads/9772d5e406c6d5a56ccc40a7270a5743/사진1.png" width="400" height="370">
+## 🏗 Architecture
+<img src="img/사진1.png" width="600" height="150"/>
 
-## ⚙️ Endpoints
-# 회원 인증/인가 (api/v1/users)
+## ⛓ Erd
+<img src="img/사진2.png" width="400" height="450"/>
+
+## ⚙️ Endpoints 
+### http://ec2-3-34-195-196.ap-northeast-2.compute.amazonaws.com:8080/
+### 회원 인증/인가 (api/v1/users)
 - 회원가입 (/join)
+
+Request Body
+```json
+{
+	"userName" : "user1",
+	"password" : "user1234"
+}
+```
+Response Body
+```json
+{
+    "resultCode": "SUCCESS",
+    "result": {
+        "userId": 5,
+        "userName": "test1"
+    }
+}
+```
 - 로그인 (/login)
 
-# 포스트 (api/v1/posts)
+Request Body
+```json
+{
+  "userName" : "user1",
+  "password" : "user1234"
+}
+```
+Response Body
+```json
+{
+  "resultCode": "SUCCESS",
+  "result": {
+    "jwt": "eyJhbGciOiJIU"
+  }
+}
+```
+
+### 포스트 (api/v1/posts)
 - `GET` 전체 조회 
+
+Request Body
+```json
+"resultCode": "SUCCESS",
+"result": {
+"content": [
+{
+"id": 10,
+"title": "title",
+"body": "body",
+"userName": "name",
+"createdAt": "2022/12/26 10:43:25",
+"lastModifiedAt": "2022/12/27 10:43:25"
+}
+...
+```
+
 - `POST` 포스트 등록
+
+Request Body
+```json
+{
+  "title" : "title1",
+  "body" : "body1"
+}
+```
+Response Body
+```json
+{
+  "resultCode":"SUCCESS",
+  "result":{
+    "message":"포스트 등록 완료",
+    "postId":0
+  }
+}
+```
 - `GET` 포스트 상세(/{postsId})
+
+Response Body
+```
+{
+	"resultCode":"SUCCESS",
+	"result":{
+		"id" : 1,
+		"title" : "title",
+		"body" : "body",
+		"userName" : "user",
+		"createdAt" : yyyy-mm-dd hh:mm:ss,
+		"lastModifiedAt" : yyyy-mm-dd hh:mm:ss
+	}
+}
+
+```
 - `PUT` 포스트 수정(/{id})
+
+Request Body
+```json
+{
+  "title" : "modified title",
+  "body" : "modified body"
+}
+```
+Response Body
+```json
+{
+  "resultCode":"SUCCESS",
+  "result":{
+    "message":"포스트 수정 완료",
+    "postId":0
+  }
+}
+```
 - `DELETE` 포스트 삭제(/{id})
+
+Response Body
+```json
+{
+  "resultCode":"SUCCESS",
+  "result":{
+    "message":"포스트 삭제 완료",
+    "postId":0
+  }
+}
+```
 
 
 
