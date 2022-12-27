@@ -7,10 +7,10 @@
 http://ec2-3-34-195-196.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 
 ## 🏗 Architecture
-![](img/사진1.png)
+![](img/img1.png)
 
 ## ⛓ Erd
-![](img/사진2.png)
+![](img/img2.png)
 
 
 ## ⚙️ Endpoints 
