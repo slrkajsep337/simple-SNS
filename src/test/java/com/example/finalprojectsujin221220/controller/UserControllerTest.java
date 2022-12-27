@@ -28,8 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@WebMvcTest
+@WebMvcTest(UserController.class)
 class UserControllerTest {
 
     @Autowired
@@ -100,7 +99,7 @@ class UserControllerTest {
     @WithMockUser
     void login_fail1() throws Exception {
 
-        when(us.login(any(), any())).thenThrow(new ApplicationException(ErrorCode.NOT_FOUND_USER_NAME, ErrorCode.NOT_FOUND_USER_NAME.getMessage()));
+        when(us.login(any(), any())).thenThrow(new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())
