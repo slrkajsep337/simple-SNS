@@ -11,5 +11,16 @@ public class HelloController {
         return "이수진";
     }
 
+    @GetMapping("/hello/{num}")
+    public int sumOfDigit(@PathVariable int num) {
+        int answer = 0;
+        while (num != 0) {
+            answer += num%10;
+            num /= 10;
+        }
+
+        return answer;
+    }
+
 
 }
