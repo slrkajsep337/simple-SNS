@@ -11,12 +11,12 @@ import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -61,11 +61,12 @@ public class PostService {
                 .build();
     }
 
-    public List<PostDetailsResponse> showPosts(Pageable pageable) {
+    public Page<PostDetailsResponse> showPosts(Pageable pageable) {
         Page<Post> posts = pr.findAll(pageable);
-        List<PostDetailsResponse> postResponses = posts.stream()
-                .map(post -> Post.of(post)).collect(Collectors.toList());
+        Page<PostDetailsResponse> postResponses = new PageImpl<>(posts.stream()
+                .map(post -> Post.of(post)).collect(Collectors.toList()));
         return postResponses;
+        //pages.map + dto에 함수 만들어서
     }
 
     public PostModifyResponse modifyPost(Long postId, PostModifyRequest dto, Authentication authentication) {
