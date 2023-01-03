@@ -3,10 +3,7 @@ package com.example.finalprojectsujin221220.service;
 import com.example.finalprojectsujin221220.domain.entity.Comment;
 import com.example.finalprojectsujin221220.domain.entity.Post;
 import com.example.finalprojectsujin221220.domain.entity.User;
-import com.example.finalprojectsujin221220.dto.CommentCreateRequest;
-import com.example.finalprojectsujin221220.dto.CommentCreateResponse;
-import com.example.finalprojectsujin221220.dto.CommentModifyRequest;
-import com.example.finalprojectsujin221220.dto.CommentModifyResponse;
+import com.example.finalprojectsujin221220.dto.*;
 import com.example.finalprojectsujin221220.exception.ApplicationException;
 import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.CommentRepository;
@@ -73,6 +70,26 @@ public class CommentService {
                 .postId(postId)
                 .createdAt(savedComment.getCreatedAt())
                 .lastModifiedAt(savedComment.getLastModifiedAt())
+                .build();
+
+    }
+
+    public CommentDeleteResponse deleteComment(Long postId, Long id, Authentication authentication) {
+        User user = ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        Post post = pr.findById(postId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        Comment comment = cr.findById(id)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
+
+        if(!comment.getPost().equals(post)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        if(!comment.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+
+        cr.delete(comment);
+
+        return CommentDeleteResponse.builder()
+                .message("댓글 삭제 완료")
+                .id(id)
                 .build();
 
     }

@@ -2,10 +2,7 @@ package com.example.finalprojectsujin221220.controller;
 
 
 import com.example.finalprojectsujin221220.domain.Response;
-import com.example.finalprojectsujin221220.dto.CommentCreateRequest;
-import com.example.finalprojectsujin221220.dto.CommentCreateResponse;
-import com.example.finalprojectsujin221220.dto.CommentModifyRequest;
-import com.example.finalprojectsujin221220.dto.CommentModifyResponse;
+import com.example.finalprojectsujin221220.dto.*;
 import com.example.finalprojectsujin221220.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -26,6 +23,11 @@ public class CommentController {
     @PutMapping("/posts/{postId}/comments/{id}")
     public Response<CommentModifyResponse> modifyComment(@PathVariable Long postId, @PathVariable Long id, @RequestBody CommentModifyRequest dto, Authentication authentication) {
         return Response.success(cs.modifyComment(postId, id, dto, authentication));
+    }
+
+    @DeleteMapping("/posts/{postId}/comments/{id}")
+    public Response<CommentDeleteResponse> deleteComment(@PathVariable Long postId, @PathVariable Long id, Authentication authentication) {
+        return Response.success(cs.deleteComment(postId, id, authentication));
     }
 
 
