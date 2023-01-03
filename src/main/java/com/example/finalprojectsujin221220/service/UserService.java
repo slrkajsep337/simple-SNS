@@ -3,7 +3,6 @@ package com.example.finalprojectsujin221220.service;
 import com.example.finalprojectsujin221220.domain.entity.User;
 import com.example.finalprojectsujin221220.dto.UserDto;
 import com.example.finalprojectsujin221220.dto.UserJoinRequest;
-import com.example.finalprojectsujin221220.dto.UserLoginRequest;
 import com.example.finalprojectsujin221220.exception.ApplicationException;
 import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.UserRepository;
