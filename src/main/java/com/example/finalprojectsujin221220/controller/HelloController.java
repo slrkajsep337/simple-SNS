@@ -1,10 +1,15 @@
 package com.example.finalprojectsujin221220.controller;
 
+import com.example.finalprojectsujin221220.service.HelloService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class HelloController {
+
+    private final HelloService hs;
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String hello() {
@@ -12,14 +17,8 @@ public class HelloController {
     }
 
     @GetMapping("/hello/{num}")
-    public int sumOfDigit(@PathVariable int num) {
-        int answer = 0;
-        while (num != 0) {
-            answer += num%10;
-            num /= 10;
-        }
-
-        return answer;
+    public int showSum(@PathVariable int num) {
+        return hs.sumOfDigit(num);
     }
 
 
