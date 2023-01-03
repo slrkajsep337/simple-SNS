@@ -5,6 +5,10 @@ import com.example.finalprojectsujin221220.domain.Response;
 import com.example.finalprojectsujin221220.dto.*;
 import com.example.finalprojectsujin221220.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +34,10 @@ public class CommentController {
         return Response.success(cs.deleteComment(postId, id, authentication));
     }
 
-
+    //    GET /posts/{postId}/comments[?page=0]
+    @GetMapping("/posts/{postId}/comments")
+    public Response<Page<CommentListResponse>> showComments(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(cs.showComments(pageable));
+    }
 
 }

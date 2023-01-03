@@ -1,5 +1,6 @@
 package com.example.finalprojectsujin221220.domain.entity;
 
+import com.example.finalprojectsujin221220.dto.CommentListResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,8 +33,15 @@ public class Comment {
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 
-
-
+    public static CommentListResponse of(Comment comment) {
+        return CommentListResponse.builder()
+                .id(comment.getCommentId())
+                .comment(comment.getComment())
+                .userName(comment.getUser().getUserName())
+                .postId(comment.getPost().getPostId())
+                .createdAt(comment.getCreatedAt())
+                .build();
+    }
 
 
 

@@ -10,6 +10,8 @@ import com.example.finalprojectsujin221220.repository.CommentRepository;
 import com.example.finalprojectsujin221220.repository.PostRepository;
 import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +94,17 @@ public class CommentService {
                 .id(id)
                 .build();
 
+    }
+
+    public Page<CommentListResponse> showComments(Pageable pageable) {
+//        Page<Comment> comments = cr.findAll(pageable);
+//        Page<Comment> comments = cr.findAllComments(pageable);
+//        Page<CommentListResponse> response = new PageImpl<>(comments.stream()
+//                .map(comment -> Comment.of(comment)).collect(Collectors.toList()));
+//
+//        return response;
+
+        return cr.findAll(pageable).map(CommentListResponse::toCommentListResponse);
     }
 
 
