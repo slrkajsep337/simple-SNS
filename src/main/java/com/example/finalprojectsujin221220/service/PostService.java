@@ -107,4 +107,11 @@ public class PostService {
                 .build();
 
     }
+
+    public Page<PostListResponse> showMyPosts(Pageable pageable, Authentication authentication) {
+        User user = ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException((ErrorCode.USERNAME_NOT_FOUND), ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        Page<Post> byUser = pr.findByUser(user, pageable);
+        return byUser.map(PostListResponse::toPostListResponse);
+    }
 }

@@ -47,4 +47,11 @@ public class PostController {
         return Response.success(ps.deletePost(id, authentication));
     }
 
+    @GetMapping("/my")
+    public Response<Page<PostListResponse>> showComments(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        return Response.success(ps.showMyPosts(pageable, authentication));
+    }
+
+
+
 }
