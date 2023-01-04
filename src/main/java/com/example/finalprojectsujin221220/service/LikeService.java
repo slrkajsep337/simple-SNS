@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -49,5 +50,18 @@ public class LikeService {
 
         lr.save(likeEntity);
         return message;
+    }
+
+    public int countLike(Long postId) {
+        Post post = pr.findById(postId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        List<LikeEntity> likeEntity = lr.findByPost(post);
+        int cnt = 0;
+        for(LikeEntity l: likeEntity) {
+            if (l.getDeletedAt() == null) {
+                cnt++;
+            }
+        }
+        return cnt;
     }
 }

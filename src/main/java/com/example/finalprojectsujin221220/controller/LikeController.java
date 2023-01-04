@@ -5,10 +5,7 @@ import com.example.finalprojectsujin221220.domain.Response;
 import com.example.finalprojectsujin221220.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,6 +17,11 @@ public class LikeController {
     @PostMapping("/posts/{postId}/likes")
     public Response pushLike(@PathVariable Long postId, Authentication authentication) {
         return Response.success(ls.pushLike(postId, authentication));
+    }
+
+    @GetMapping("/posts/{postId}/likes")
+    public Response countLike(@PathVariable Long postId) {
+        return Response.success(ls.countLike(postId));
     }
 
 
