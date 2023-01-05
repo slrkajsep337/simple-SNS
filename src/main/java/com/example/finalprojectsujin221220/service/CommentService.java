@@ -25,6 +25,7 @@ public class CommentService {
     private final UserRepository ur;
     private final PostRepository pr;
     private final CommentRepository cr;
+    private final AlarmService as;
 
 
     public CommentCreateResponse newComment(Long postId, CommentCreateRequest dto, Authentication authentication) {
@@ -41,6 +42,8 @@ public class CommentService {
                 .build();
 
         Comment savedComment = cr.save(comment);
+
+        as.newAlarm(postOpt.get().getUser(),userOpt.get().getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
 
         return CommentCreateResponse.builder()
                 .id(savedComment.getCommentId())

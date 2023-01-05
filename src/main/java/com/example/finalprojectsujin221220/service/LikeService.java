@@ -23,6 +23,7 @@ public class LikeService {
     private final UserRepository ur;
     private final PostRepository pr;
     private final LikeRepository lr;
+    private final AlarmService as;
 
     public String pushLike(Long postId, Authentication authentication) {
 
@@ -38,10 +39,12 @@ public class LikeService {
                     .user(user)
                     .post(post)
                     .build();
+            as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
             message = "좋아요를 눌렀습니다.";
         } else if(likeEntity.getDeletedAt()!=null) {
             likeEntity.setCreatedAt(LocalDateTime.now());
             likeEntity.setDeletedAt(null);
+            as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
             message = "좋아요를 눌렀습니다.";
         } else {
             likeEntity.setDeletedAt(LocalDateTime.now());
