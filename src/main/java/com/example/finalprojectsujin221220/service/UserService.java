@@ -1,8 +1,8 @@
 package com.example.finalprojectsujin221220.service;
 
 import com.example.finalprojectsujin221220.domain.entity.User;
-import com.example.finalprojectsujin221220.dto.UserDto;
 import com.example.finalprojectsujin221220.dto.UserJoinRequest;
+import com.example.finalprojectsujin221220.dto.UserJoinResponse;
 import com.example.finalprojectsujin221220.exception.ApplicationException;
 import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.UserRepository;
@@ -26,18 +26,16 @@ public class UserService {
     private long expireTime = 1000 * 60 * 60; //1시간
 
 
-    public UserDto join(UserJoinRequest dto) {
+    public UserJoinResponse join(UserJoinRequest dto) {
 
-        //userName 중복 -> 예외처리
+        //userName 중복 확인
         ur.findByUserName(dto.getUserName())
-                .ifPresent(user -> {
-                    throw new ApplicationException(ErrorCode.DUPLICATED_USER_NAME,
-                            ErrorCode.DUPLICATED_USER_NAME.getMessage());
+                .ifPresent(user -> {throw new ApplicationException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());
                 });
 
         User savedUser = ur.save(dto.toEntity(encoder.encode(dto.getPassword())));
 
-        return UserDto.builder()
+        return UserJoinResponse.builder()
                 .userId(savedUser.getUserId())
                 .userName(savedUser.getUserName())
                 .build();
@@ -47,15 +45,12 @@ public class UserService {
 
         //username 존재 확인
         User user = ur.findByUserName(userName)
-                .orElseThrow(() -> {
-                    throw new ApplicationException(ErrorCode.USERNAME_NOT_FOUND,
-                ErrorCode.USERNAME_NOT_FOUND.getMessage());
+                .orElseThrow(() -> {throw new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage());
     });
 
         //password 일치 확인
         if(!encoder.matches(password, user.getPassword())) {
-            throw new ApplicationException(ErrorCode.INVALID_PASSWORD,
-                    ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new ApplicationException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
         //token 발행

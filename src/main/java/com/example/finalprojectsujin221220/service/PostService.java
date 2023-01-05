@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -29,16 +28,18 @@ public class PostService {
     private final PostRepository pr;
 
 
+    //포스트 등록
     public PostCreateResponse newPost(PostCreateRequest dto, Authentication authentication) {
+        User user = ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
-        Optional<User> userOpt = ur.findByUserName(authentication.getName());
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .body(dto.getBody())
                 .userName(authentication.getName())
                 .createdAt(LocalDateTime.now())
                 .lastModifiedAt(LocalDateTime.now())
-                .user(userOpt.get())
+                .user(user)
                 .build();
 
         Post savedPost = pr.save(post);
@@ -48,19 +49,22 @@ public class PostService {
                 .build();
     }
 
+    //포스트 한개 조회
     public PostDetailsResponse showOnePost(Long id) {
-        Optional<Post> postOpt = pr.findById(id);
+        Post post = pr.findById(id)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
         return PostDetailsResponse.builder()
-                .id(postOpt.get().getPostId())
-                .title(postOpt.get().getTitle())
-                .body(postOpt.get().getBody())
-                .userName(postOpt.get().getUserName())
-                .createdAt(postOpt.get().getCreatedAt())
-                .lastModifiedAt(postOpt.get().getLastModifiedAt())
+                .id(post.getPostId())
+                .title(post.getTitle())
+                .body(post.getBody())
+                .userName(post.getUserName())
+                .createdAt(post.getCreatedAt())
+                .lastModifiedAt(post.getLastModifiedAt())
                 .build();
     }
 
+    //포스트 전체 조회
     public Page<PostDetailsResponse> showPosts(Pageable pageable) {
         Page<Post> posts = pr.findAll(pageable);
         Page<PostDetailsResponse> postResponses = new PageImpl<>(posts.stream()
@@ -69,10 +73,10 @@ public class PostService {
         //pages.map + dto에 함수 만들어서
     }
 
+    //포스트 수정
     public PostModifyResponse modifyPost(Long postId, PostModifyRequest dto, Authentication authentication) {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
-
         Post post = pr.findById(postId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
@@ -91,6 +95,7 @@ public class PostService {
     }
 
 
+    //포스트 삭제
     public PostDeleteResponse deletePost(Long postId, Authentication authentication) {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -108,6 +113,7 @@ public class PostService {
 
     }
 
+    //마이피드 조회
     public Page<PostListResponse> showMyPosts(Pageable pageable, Authentication authentication) {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException((ErrorCode.USERNAME_NOT_FOUND), ErrorCode.USERNAME_NOT_FOUND.getMessage()));

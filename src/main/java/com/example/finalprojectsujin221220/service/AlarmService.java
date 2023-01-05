@@ -24,8 +24,7 @@ public class AlarmService {
     private final UserRepository ur;
     private final AlarmRepository ar;
 
-    //showAlarms는 그냥 저장된 내용을 보여주는 기능
-    //댓글달기/좋아요누르기 기능에 알람 저장해주는 기능을 추가해야 함
+    //알람 조회
     public List<AlarmListResponse> showAlarms(Pageable pageable, Authentication authentication) {
 
         User user = ur.findByUserName(authentication.getName())
@@ -38,6 +37,7 @@ public class AlarmService {
 
     }
 
+    //알람 저장
     public void newAlarm(User user, Long fromId, Long postId, LocalDateTime time, String alarmType, String text) {
 
         Alarm alarm = Alarm.builder()

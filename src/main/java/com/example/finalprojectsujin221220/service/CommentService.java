@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,22 +27,25 @@ public class CommentService {
     private final AlarmService as;
 
 
+    //코멘트 등록
     public CommentCreateResponse newComment(Long postId, CommentCreateRequest dto, Authentication authentication) {
 
-        Optional<User> userOpt = ur.findByUserName(authentication.getName());
-        Optional<Post> postOpt = pr.findById(postId);
+        User user = ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        Post post = pr.findById(postId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
 
         Comment comment = Comment.builder()
                 .comment(dto.getComment())
                 .createdAt(LocalDateTime.now())
                 .lastModifiedAt(LocalDateTime.now())
-                .user(userOpt.get())
-                .post(postOpt.get())
+                .user(user)
+                .post(post)
                 .build();
 
         Comment savedComment = cr.save(comment);
 
-        as.newAlarm(postOpt.get().getUser(),userOpt.get().getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
+        as.newAlarm(post.getUser(),user.getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
 
         return CommentCreateResponse.builder()
                 .id(savedComment.getCommentId())
@@ -55,6 +57,7 @@ public class CommentService {
 
     }
 
+    //코멘트 수정
     public CommentModifyResponse modifyComment(Long postId, Long id, CommentModifyRequest dto, Authentication authentication) {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -79,6 +82,7 @@ public class CommentService {
 
     }
 
+    //코멘트 삭제
     public CommentDeleteResponse deleteComment(Long postId, Long id, Authentication authentication) {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -99,15 +103,12 @@ public class CommentService {
 
     }
 
-    public Page<CommentListResponse> showComments(Pageable pageable) {
-//        Page<Comment> comments = cr.findAll(pageable);
-//        Page<Comment> comments = cr.findAllComments(pageable);
-//        Page<CommentListResponse> response = new PageImpl<>(comments.stream()
-//                .map(comment -> Comment.of(comment)).collect(Collectors.toList()));
-//
-//        return response;
+    //포스트 해당 코멘트 전체 조회
+    public Page<CommentListResponse> showComments(Long postId, Pageable pageable) {
+        Post post = pr.findById(postId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
-        return cr.findAll(pageable).map(CommentListResponse::toCommentListResponse);
+        return cr.findByPost(post, pageable).map(CommentListResponse::toCommentListResponse);
     }
 
 

@@ -19,25 +19,28 @@ public class CommentController {
 
     private final CommentService cs;
 
+    //코멘트 등록
     @PostMapping("/posts/{postId}/comments")
     public Response<CommentCreateResponse> newComment(@PathVariable Long postId, @RequestBody CommentCreateRequest dto, Authentication authentication) {
         return Response.success(cs.newComment(postId, dto, authentication));
     }
 
+    //코멘트 수정
     @PutMapping("/posts/{postId}/comments/{id}")
     public Response<CommentModifyResponse> modifyComment(@PathVariable Long postId, @PathVariable Long id, @RequestBody CommentModifyRequest dto, Authentication authentication) {
         return Response.success(cs.modifyComment(postId, id, dto, authentication));
     }
 
+    //코멘트 삭제
     @DeleteMapping("/posts/{postId}/comments/{id}")
     public Response<CommentDeleteResponse> deleteComment(@PathVariable Long postId, @PathVariable Long id, Authentication authentication) {
         return Response.success(cs.deleteComment(postId, id, authentication));
     }
 
-    //    GET /posts/{postId}/comments[?page=0]
+    //코멘트 전체 조회
     @GetMapping("/posts/{postId}/comments")
-    public Response<Page<CommentListResponse>> showComments(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return Response.success(cs.showComments(pageable));
+    public Response<Page<CommentListResponse>> showComments(@PathVariable Long postId, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return Response.success(cs.showComments(postId, pageable));
     }
 
 }

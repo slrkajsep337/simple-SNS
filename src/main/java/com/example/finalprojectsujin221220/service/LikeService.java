@@ -25,6 +25,7 @@ public class LikeService {
     private final LikeRepository lr;
     private final AlarmService as;
 
+    //좋아요 누르기/취소
     public String pushLike(Long postId, Authentication authentication) {
 
         User user = ur.findByUserName(authentication.getName())
@@ -55,6 +56,7 @@ public class LikeService {
         return message;
     }
 
+    //좋아요 갯수 조회
     public int countLike(Long postId) {
         Post post = pr.findById(postId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));

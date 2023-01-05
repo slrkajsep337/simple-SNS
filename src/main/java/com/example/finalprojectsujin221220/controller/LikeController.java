@@ -22,11 +22,13 @@ public class LikeController {
     private final LikeService ls;
     private final AlarmService as;
 
+    //좋아요 누르기
     @PostMapping("/posts/{postId}/likes")
     public Response pushLike(@PathVariable Long postId, Authentication authentication) {
         return Response.success(ls.pushLike(postId, authentication));
     }
 
+    //좋아요 갯수 조회
     @GetMapping("/posts/{postId}/likes")
     public Response countLike(@PathVariable Long postId) {
         return Response.success(ls.countLike(postId));
