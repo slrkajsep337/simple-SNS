@@ -31,7 +31,7 @@ public class CommentService {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
         Post post = pr.findById(postId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
         Comment comment = Comment.builder()
                 .comment(dto.getComment())
@@ -41,7 +41,9 @@ public class CommentService {
 
         Comment savedComment = cr.save(comment);
 
-        as.newAlarm(post.getUser(),user.getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
+        if(post.getUser() != user) {
+            as.newAlarm(post.getUser(),user.getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
+        }
 
         return CommentCreateResponse.builder()
                 .id(savedComment.getCommentId())

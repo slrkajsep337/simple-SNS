@@ -39,7 +39,9 @@ public class LikeService {
                     .post(post)
                     .build();
             lr.save(likeEntity);
-            as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
+            if(post.getUser() != user) {
+                as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
+            }
             message = "좋아요를 눌렀습니다.";
         } else {
             lr.delete(likeEntity);
