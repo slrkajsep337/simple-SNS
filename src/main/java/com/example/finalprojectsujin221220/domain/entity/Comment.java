@@ -1,10 +1,8 @@
 package com.example.finalprojectsujin221220.domain.entity;
 
-import com.example.finalprojectsujin221220.dto.CommentListResponse;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
-public class Comment {
+public class Comment extends BaseTime{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,20 +27,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "postId") //User 의 id
     private Post post;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
-
-    public static CommentListResponse of(Comment comment) {
-        return CommentListResponse.builder()
-                .id(comment.getCommentId())
-                .comment(comment.getComment())
-                .userName(comment.getUser().getUserName())
-                .postId(comment.getPost().getPostId())
-                .createdAt(comment.getCreatedAt())
-                .build();
-    }
-
 
 
 }

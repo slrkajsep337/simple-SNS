@@ -37,8 +37,6 @@ public class PostService {
                 .title(dto.getTitle())
                 .body(dto.getBody())
                 .userName(authentication.getName())
-                .createdAt(LocalDateTime.now())
-                .lastModifiedAt(LocalDateTime.now())
                 .user(user)
                 .build();
 

@@ -15,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @RequiredArgsConstructor
 @Service
 public class CommentService {
@@ -37,8 +35,6 @@ public class CommentService {
 
         Comment comment = Comment.builder()
                 .comment(dto.getComment())
-                .createdAt(LocalDateTime.now())
-                .lastModifiedAt(LocalDateTime.now())
                 .user(user)
                 .post(post)
                 .build();
@@ -62,13 +58,12 @@ public class CommentService {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
         Post post = pr.findById(postId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         Comment comment = cr.findById(id)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
-        if( !post.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        if( !comment.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
 
         comment.setComment(dto.getComment());
-        comment.setLastModifiedAt(LocalDateTime.now());
         Comment savedComment = cr.save(comment);
 
         return CommentModifyResponse.builder()

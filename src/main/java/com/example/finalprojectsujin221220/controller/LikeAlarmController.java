@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
-public class LikeController {
+public class LikeAlarmController {
 
     private final LikeService ls;
     private final AlarmService as;

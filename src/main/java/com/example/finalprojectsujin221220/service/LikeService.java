@@ -36,23 +36,24 @@ public class LikeService {
         String message;
         if(likeEntity==null) {
             likeEntity = LikeEntity.builder()
-                    .createdAt(LocalDateTime.now())
                     .user(user)
                     .post(post)
                     .build();
+            lr.save(likeEntity);
             as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
             message = "좋아요를 눌렀습니다.";
         } else if(likeEntity.getDeletedAt()!=null) {
             likeEntity.setCreatedAt(LocalDateTime.now());
             likeEntity.setDeletedAt(null);
+            lr.save(likeEntity);
             as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
             message = "좋아요를 눌렀습니다.";
         } else {
             likeEntity.setDeletedAt(LocalDateTime.now());
+            lr.save(likeEntity);
             message = "좋아요를 취소했습니다.";
         }
 
-        lr.save(likeEntity);
         return message;
     }
 
