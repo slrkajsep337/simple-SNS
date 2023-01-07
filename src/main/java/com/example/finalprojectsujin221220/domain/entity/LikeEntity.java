@@ -1,6 +1,8 @@
 package com.example.finalprojectsujin221220.domain.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import javax.persistence.*;
 @Setter
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE like_entity SET deleted_at = current_timestamp WHERE like_id = ?")
+@Where(clause = "deleted_at is NULL")
 public class LikeEntity extends BaseTime {
 
     @Id

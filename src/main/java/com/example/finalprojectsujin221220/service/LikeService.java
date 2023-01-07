@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,15 +41,8 @@ public class LikeService {
             lr.save(likeEntity);
             as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
             message = "좋아요를 눌렀습니다.";
-        } else if(likeEntity.getDeletedAt()!=null) {
-            likeEntity.setCreatedAt(LocalDateTime.now());
-            likeEntity.setDeletedAt(null);
-            lr.save(likeEntity);
-            as.newAlarm(post.getUser(), user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!");
-            message = "좋아요를 눌렀습니다.";
         } else {
-            likeEntity.setDeletedAt(LocalDateTime.now());
-            lr.save(likeEntity);
+            lr.delete(likeEntity);
             message = "좋아요를 취소했습니다.";
         }
 
@@ -62,12 +54,7 @@ public class LikeService {
         Post post = pr.findById(postId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         List<LikeEntity> likeEntity = lr.findByPost(post);
-        int cnt = 0;
-        for(LikeEntity l: likeEntity) {
-            if (l.getDeletedAt() == null) {
-                cnt++;
-            }
-        }
-        return cnt;
+
+        return likeEntity.size();
     }
 }

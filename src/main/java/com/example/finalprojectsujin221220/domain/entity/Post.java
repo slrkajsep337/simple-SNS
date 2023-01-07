@@ -3,6 +3,8 @@ package com.example.finalprojectsujin221220.domain.entity;
 
 import com.example.finalprojectsujin221220.dto.PostDetailsResponse;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @Setter
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE post_id = ?")
+@Where(clause = "deleted_at is NULL")
 public class Post extends BaseTime {
 
     @Id
