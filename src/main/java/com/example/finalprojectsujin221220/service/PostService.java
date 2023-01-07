@@ -27,12 +27,27 @@ public class PostService {
     private final UserRepository ur;
     private final PostRepository pr;
 
+    //[중복 로직] user 존재 확인 + 가져오기
+    public User validateUser(Authentication authentication) {
+        return ur.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+    }
+
+    //[중복 로직] post 존재 확인 + 가져오기
+    public Post validatePost(Long id) {
+        return pr.findById(id)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+    }
+
+    //[중복 로직] 권한 확인 (post를 작성한 유저와 접근 하려는 유저가 동일한지 확인)
+    public void validateAuthority(User postUser, User user) {
+        if( !postUser.equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+    }
+
 
     //포스트 등록
     public PostCreateResponse newPost(PostCreateRequest dto, Authentication authentication) {
-        User user = ur.findByUserName(authentication.getName())
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
-
+        User user = validateUser(authentication);
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .body(dto.getBody())
@@ -49,8 +64,7 @@ public class PostService {
 
     //포스트 한개 조회
     public PostDetailsResponse showOnePost(Long id) {
-        Post post = pr.findById(id)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        Post post = validatePost(id);
 
         return PostDetailsResponse.builder()
                 .id(post.getPostId())
@@ -73,12 +87,9 @@ public class PostService {
 
     //포스트 수정
     public PostModifyResponse modifyPost(Long postId, PostModifyRequest dto, Authentication authentication) {
-        User user = ur.findByUserName(authentication.getName())
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
-        Post post = pr.findById(postId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
-
-        if( !post.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        User user = validateUser(authentication);
+        Post post = validatePost(postId);
+        validateAuthority(post.getUser(), user); //권한 확인 (post를 작성한 유저와 접근 하려는 유저가 동일한지 확인)
 
         post.setTitle(dto.getTitle());
         post.setBody(dto.getBody());
@@ -95,12 +106,9 @@ public class PostService {
 
     //포스트 삭제
     public PostDeleteResponse deletePost(Long postId, Authentication authentication) {
-        User user = ur.findByUserName(authentication.getName())
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
-        Post post = pr.findById(postId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
-
-        if(!post.getUser().equals(user)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        User user = validateUser(authentication);
+        Post post = validatePost(postId);
+        validateAuthority(post.getUser(), user); //권한 확인 (post를 작성한 유저와 접근 하려는 유저가 동일한지 확인)
 
         pr.delete(post);
 
@@ -108,13 +116,11 @@ public class PostService {
                 .message("포스트 삭제 완료")
                 .postId(post.getPostId())
                 .build();
-
     }
 
     //마이피드 조회
     public Page<PostListResponse> showMyPosts(Pageable pageable, Authentication authentication) {
-        User user = ur.findByUserName(authentication.getName())
-                .orElseThrow(() -> new ApplicationException((ErrorCode.USERNAME_NOT_FOUND), ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        User user = validateUser(authentication);
         Page<Post> byUser = pr.findByUser(user, pageable);
         return byUser.map(PostListResponse::toPostListResponse);
     }
