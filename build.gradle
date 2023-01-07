@@ -27,9 +27,16 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // swagger dependency
+    //security
+    implementation 'org.springframework.security:spring-security-test:5.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // swagger
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation "io.springfox:springfox-swagger-ui:3.0.0"
+
+    //token 발행
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }
 
 tasks.named('test') {
