@@ -1,6 +1,6 @@
 stages:
   - dockerbuild-push
-  
+
 package:
   only:
     - main
