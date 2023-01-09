@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -91,10 +90,7 @@ public class PostService {
         Post post = validatePost(postId);
         validateAuthority(post.getUser(), user); //권한 확인 (post를 작성한 유저와 접근 하려는 유저가 동일한지 확인)
 
-        post.setTitle(dto.getTitle());
-        post.setBody(dto.getBody());
-        post.setLastModifiedAt(LocalDateTime.now());
-
+        post.update(dto.getTitle(), dto.getBody());
         Post savedPost = pr.save(post);
 
         return PostModifyResponse.builder()

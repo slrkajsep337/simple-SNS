@@ -48,8 +48,6 @@ public class CommentService {
         if( !origin.equals(compareTo)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
     }
 
-
-
     //코멘트 등록
     public CommentCreateResponse newComment(Long postId, CommentCreateRequest dto, Authentication authentication) {
 
@@ -84,7 +82,7 @@ public class CommentService {
         Comment comment = validateComment(id);
         validateAuthority(comment.getUser(), user); //comment를 작성한 유저와 접근(수정)한 유저가 동일한지 확인
 
-        comment.setComment(dto.getComment());
+        comment.update(dto.getComment());
         Comment savedComment = cr.save(comment);
 
         return CommentModifyResponse.builder()

@@ -11,7 +11,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 @Entity
 @SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE post_id = ?")
@@ -38,6 +37,11 @@ public class Post extends BaseTime {
                 .body(post.getBody())
                 .userName(post.getUserName())
                 .build();
+    }
+
+    public void update(String title, String body) {
+        this.title = title;
+        this.body = body;
     }
 
 
