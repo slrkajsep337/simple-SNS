@@ -44,4 +44,18 @@ public class Alarm {
                 .createdAt(alarm.getCreatedAt())
                 .build();
     }
+
+    //알람 저장
+    public static Alarm toEntity(User user, Long fromId, Long postId, LocalDateTime time, String alarmType, String text) {
+
+        return Alarm.builder()
+                .alarmType(alarmType)
+                .fromUserId(fromId)
+                .targetId(postId)
+                .user(user)
+                .text(text)
+                .createdAt(time)
+                .build();
+
+    }
 }

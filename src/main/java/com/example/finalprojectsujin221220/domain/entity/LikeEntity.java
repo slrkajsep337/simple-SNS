@@ -29,5 +29,12 @@ public class LikeEntity extends BaseTime {
     @JoinColumn(name = "postId")
     private Post post;
 
+    public static LikeEntity toEntity(User user, Post post) {
+        return LikeEntity.builder()
+                .user(user)
+                .post(post)
+                .build();
+    }
+
 
 }
