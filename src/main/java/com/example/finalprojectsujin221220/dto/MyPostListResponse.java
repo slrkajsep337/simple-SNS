@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Builder
-public class PostListResponse {
+public class MyPostListResponse {
 
     private Long id;
     private String title;
@@ -21,8 +21,8 @@ public class PostListResponse {
     private String userName;
     private LocalDateTime createdAt;
 
-    public static PostListResponse toPostListResponse(Post post) {
-        return PostListResponse.builder()
+    public static MyPostListResponse toResponse(Post post) {
+        return MyPostListResponse.builder()
                 .id(post.getPostId())
                 .title(post.getTitle())
                 .body(post.getBody())

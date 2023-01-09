@@ -1,6 +1,7 @@
 package com.example.finalprojectsujin221220.dto;
 
 
+import com.example.finalprojectsujin221220.domain.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +20,15 @@ public class CommentCreateResponse {
     private String userName;
     private Long postId;
     private LocalDateTime createdAt;
+
+    public static CommentCreateResponse toResponse(Comment comment) {
+        return CommentCreateResponse.builder()
+                .id(comment.getCommentId())
+                .comment(comment.getComment())
+                .userName(comment.getUser().getUserName())
+                .postId(comment.getPost().getPostId())
+                .createdAt(comment.getCreatedAt())
+                .build();
+    }
 
 }

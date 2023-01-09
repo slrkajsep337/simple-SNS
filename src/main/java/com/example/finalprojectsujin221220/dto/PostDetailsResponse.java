@@ -1,6 +1,7 @@
 package com.example.finalprojectsujin221220.dto;
 
 
+import com.example.finalprojectsujin221220.domain.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +21,16 @@ public class PostDetailsResponse {
     private String userName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
+
+    public static PostDetailsResponse toResponse(Post post) {
+        return PostDetailsResponse.builder()
+                .id(post.getPostId())
+                .title(post.getTitle())
+                .body(post.getBody())
+                .userName(post.getUserName())
+                .createdAt(post.getCreatedAt())
+                .lastModifiedAt(post.getLastModifiedAt())
+                .build();
+    }
 
 }

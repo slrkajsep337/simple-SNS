@@ -42,7 +42,7 @@ public class PostController {
     //포스트 전체 조회
     @Operation(summary = "post 전체 조회", description = "인증 없이도 전체 post를 조회할 수 있습니다.")
     @GetMapping
-    public Response<Page<PostDetailsResponse>> showList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response<Page<PostListResponse>> showList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return Response.success(ps.showPosts(pageable));
     }
 
@@ -56,14 +56,14 @@ public class PostController {
     //포스트 삭제
     @Operation(summary = "post 삭제", description = "인증된(post를 등록한) user만 post를 삭제할 수 있습니다.")
     @DeleteMapping("/{id}")
-    public Response deletePost(@PathVariable Long id, Authentication authentication) {
+    public Response<PostDeleteResponse> deletePost(@PathVariable Long id, Authentication authentication) {
         return Response.success(ps.deletePost(id, authentication));
     }
 
     //내 포스트 보기
     @Operation(summary = "my post 조회하기", description = "인증된 user만 자신의 post를 조회할 수 있습니다.")
     @GetMapping("/my")
-    public Response<Page<PostListResponse>> showComments(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public Response<Page<MyPostListResponse>> showComments(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         return Response.success(ps.showMyPosts(pageable, authentication));
     }
 
