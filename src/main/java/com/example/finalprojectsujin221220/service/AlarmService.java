@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,22 +33,6 @@ public class AlarmService {
         List<AlarmListResponse> response = alarmList.stream()
                 .map(list -> Alarm.of(list)).collect(Collectors.toList());
         return response;
-
-    }
-
-    //알람 저장
-    public void newAlarm(User user, Long fromId, Long postId, LocalDateTime time, String alarmType, String text) {
-
-        Alarm alarm = Alarm.builder()
-                .alarmType(alarmType)
-                .fromUserId(fromId)
-                .targetId(postId)
-                .user(user)
-                .text(text)
-                .createdAt(time)
-                .build();
-
-        ar.save(alarm);
 
     }
 

@@ -1,11 +1,13 @@
 package com.example.finalprojectsujin221220.service;
 
+import com.example.finalprojectsujin221220.domain.entity.Alarm;
 import com.example.finalprojectsujin221220.domain.entity.Comment;
 import com.example.finalprojectsujin221220.domain.entity.Post;
 import com.example.finalprojectsujin221220.domain.entity.User;
 import com.example.finalprojectsujin221220.dto.*;
 import com.example.finalprojectsujin221220.exception.ApplicationException;
 import com.example.finalprojectsujin221220.exception.ErrorCode;
+import com.example.finalprojectsujin221220.repository.AlarmRepository;
 import com.example.finalprojectsujin221220.repository.CommentRepository;
 import com.example.finalprojectsujin221220.repository.PostRepository;
 import com.example.finalprojectsujin221220.repository.UserRepository;
@@ -22,8 +24,8 @@ public class CommentService {
     private final UserRepository ur;
     private final PostRepository pr;
     private final CommentRepository cr;
-    private final AlarmService as;
-
+//    private final AlarmService as;
+    private final AlarmRepository ar;
 
     //[중복 로직] user 존재 확인 + 가져오기
     public User validateUser(Authentication authentication) {
@@ -58,7 +60,7 @@ public class CommentService {
         Comment savedComment = cr.save(comment);
 
         if(post.getUser() != user) { //post작성자가 작성한 댓글이 아니면 알람보내기
-            as.newAlarm(post.getUser(),user.getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
+            ar.save(Alarm.toEntity(post.getUser(),user.getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!"));
         }
 
         return CommentCreateResponse.toResponse(savedComment);
