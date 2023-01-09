@@ -9,7 +9,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 @Entity
 @SQLDelete(sql = "UPDATE comment SET deleted_at = current_timestamp WHERE comment_id = ?")
@@ -31,6 +30,10 @@ public class Comment extends BaseTime{
     @ManyToOne
     @JoinColumn(name = "postId") //User 의 id
     private Post post;
+
+    public void update(String comment) {
+        this.comment = comment;
+    }
 
 
 }
