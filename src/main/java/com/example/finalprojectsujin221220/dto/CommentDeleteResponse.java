@@ -12,8 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentDeleteResponse {
 
-
     private String message;
     private Long id;
+
+    public static CommentDeleteResponse toResponse(Long id) {
+        return CommentDeleteResponse.builder()
+                .message("댓글 삭제 완료")
+                .id(id)
+                .build();
+    }
 
 }

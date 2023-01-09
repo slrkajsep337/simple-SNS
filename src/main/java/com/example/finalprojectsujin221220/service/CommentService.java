@@ -30,23 +30,23 @@ public class CommentService {
         return ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
-
     //[중복 로직] post 존재 확인 + 가져오기
     public Post validatePost(Long id) {
         return pr.findById(id)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
     }
-
     //[중복 로직] comment 존재 확인 + 가져오기
     public Comment validateComment(Long id) {
         return cr.findById(id)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
     }
-
     //[중복 로직] 권한 확인
     public void validateAuthority(Object origin, Object compareTo) {
         if( !origin.equals(compareTo)) throw new ApplicationException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
     }
+
+
+
 
     //코멘트 등록
     public CommentCreateResponse newComment(Long postId, CommentCreateRequest dto, Authentication authentication) {
@@ -54,26 +54,14 @@ public class CommentService {
         User user = validateUser(authentication);
         Post post = validatePost(postId);
 
-        Comment comment = Comment.builder()
-                .comment(dto.getComment())
-                .user(user)
-                .post(post)
-                .build();
-
+        Comment comment = dto.toEntity(user, post);
         Comment savedComment = cr.save(comment);
 
-        if(post.getUser() != user) {
+        if(post.getUser() != user) { //post작성자가 작성한 댓글이 아니면 알람보내기
             as.newAlarm(post.getUser(),user.getUserId(), postId, comment.getCreatedAt(), "NEW_COMMENT_ON_POST", "new comment!");
         }
 
-        return CommentCreateResponse.builder()
-                .id(savedComment.getCommentId())
-                .comment(savedComment.getComment())
-                .userName(authentication.getName())
-                .postId(postId)
-                .createdAt(savedComment.getCreatedAt())
-                .build();
-
+        return CommentCreateResponse.toResponse(savedComment);
     }
 
     //코멘트 수정
@@ -85,14 +73,7 @@ public class CommentService {
         comment.update(dto.getComment());
         Comment savedComment = cr.save(comment);
 
-        return CommentModifyResponse.builder()
-                .id(savedComment.getCommentId())
-                .comment(savedComment.getComment())
-                .userName(authentication.getName())
-                .postId(postId)
-                .createdAt(savedComment.getCreatedAt())
-                .lastModifiedAt(savedComment.getLastModifiedAt())
-                .build();
+        return CommentModifyResponse.toResponse(savedComment);
 
     }
 
@@ -107,17 +88,13 @@ public class CommentService {
 
         cr.delete(comment);
 
-        return CommentDeleteResponse.builder()
-                .message("댓글 삭제 완료")
-                .id(id)
-                .build();
+        return CommentDeleteResponse.toResponse(id);
 
     }
 
     //포스트 해당 코멘트 전체 조회
     public Page<CommentListResponse> showComments(Long postId, Pageable pageable) {
         Post post = validatePost(postId);
-
         return cr.findByPost(post, pageable).map(CommentListResponse::toCommentListResponse);
     }
 

@@ -20,14 +20,16 @@ public class PostListResponse {
     private String body;
     private String userName;
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
-    public static PostListResponse toPostListResponse(Post post) {
+    public static PostListResponse toResponse(Post post) {
         return PostListResponse.builder()
                 .id(post.getPostId())
                 .title(post.getTitle())
                 .body(post.getBody())
                 .userName(post.getUserName())
                 .createdAt(post.getCreatedAt())
+                .createdAt(post.getLastModifiedAt())
                 .build();
     }
 

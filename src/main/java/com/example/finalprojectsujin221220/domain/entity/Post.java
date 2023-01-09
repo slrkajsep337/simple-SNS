@@ -1,8 +1,10 @@
 package com.example.finalprojectsujin221220.domain.entity;
 
 
-import com.example.finalprojectsujin221220.dto.PostDetailsResponse;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -30,19 +32,9 @@ public class Post extends BaseTime {
     @JoinColumn(name = "userId") //User 의 id
     private User user;
 
-    public static PostDetailsResponse of(Post post) {
-        return PostDetailsResponse.builder()
-                .id(post.getPostId())
-                .title(post.getTitle())
-                .body(post.getBody())
-                .userName(post.getUserName())
-                .build();
-    }
-
     public void update(String title, String body) {
         this.title = title;
         this.body = body;
     }
-
 
 }
