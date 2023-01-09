@@ -2,7 +2,7 @@ package com.example.finalprojectsujin221220.service;
 
 
 import com.example.finalprojectsujin221220.domain.entity.Alarm;
-import com.example.finalprojectsujin221220.domain.entity.LikeEntity;
+import com.example.finalprojectsujin221220.domain.entity.Likepost;
 import com.example.finalprojectsujin221220.domain.entity.Post;
 import com.example.finalprojectsujin221220.domain.entity.User;
 import com.example.finalprojectsujin221220.exception.ApplicationException;
@@ -41,17 +41,17 @@ public class LikeService {
 
         User user = validateUser(authentication);
         Post post = validatePost(postId);
-        LikeEntity likeEntity = lr.findByUserAndPost(user, post);
+        Likepost likepost = lr.findByUserAndPost(user, post);
         String message;
-        if(likeEntity==null) {
-            likeEntity = LikeEntity.toEntity(user, post);
-            lr.save(likeEntity);
+        if(likepost==null) {
+            likepost = Likepost.toEntity(user, post);
+            lr.save(likepost);
             if(post.getUser() != user) {
-                ar.save(Alarm.toEntity(post.getUser(),user.getUserId(), postId, likeEntity.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!"));
+                ar.save(Alarm.toEntity(post.getUser(),user.getUserId(), postId, likepost.getCreatedAt(), "NEW_LIKE_ON_POST", "new like!"));
             }
             message = "좋아요를 눌렀습니다.";
         } else {
-            lr.delete(likeEntity);
+            lr.delete(likepost);
             message = "좋아요를 취소했습니다.";
         }
 

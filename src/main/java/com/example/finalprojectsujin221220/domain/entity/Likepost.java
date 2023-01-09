@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @SQLDelete(sql = "UPDATE like_entity SET deleted_at = current_timestamp WHERE like_id = ?")
 @Where(clause = "deleted_at is NULL")
-public class LikeEntity extends BaseTime {
+public class Likepost extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +29,8 @@ public class LikeEntity extends BaseTime {
     @JoinColumn(name = "postId")
     private Post post;
 
-    public static LikeEntity toEntity(User user, Post post) {
-        return LikeEntity.builder()
+    public static Likepost toEntity(User user, Post post) {
+        return Likepost.builder()
                 .user(user)
                 .post(post)
                 .build();
