@@ -8,7 +8,6 @@ import com.example.finalprojectsujin221220.exception.ErrorCode;
 import com.example.finalprojectsujin221220.repository.AlarmRepository;
 import com.example.finalprojectsujin221220.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -29,11 +28,9 @@ public class AlarmService {
         User user = ur.findByUserName(authentication.getName())
                 .orElseThrow(() -> new ApplicationException((ErrorCode.USERNAME_NOT_FOUND), ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
-        Page<Alarm> alarmList = ar.findByUser(user, pageable);
-        List<AlarmListResponse> response = alarmList.stream()
-                .map(list -> Alarm.of(list)).collect(Collectors.toList());
-        return response;
-
+        List<Alarm> alarmList = ar.findByUser(user, pageable);
+        return alarmList.stream().map(Alarm::of).collect(Collectors.toList());
     }
+
 
 }
