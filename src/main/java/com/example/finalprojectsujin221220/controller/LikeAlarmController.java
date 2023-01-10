@@ -3,6 +3,7 @@ package com.example.finalprojectsujin221220.controller;
 
 import com.example.finalprojectsujin221220.domain.Response;
 import com.example.finalprojectsujin221220.dto.AlarmListResponse;
+import com.example.finalprojectsujin221220.dto.AlarmResponse;
 import com.example.finalprojectsujin221220.service.AlarmService;
 import com.example.finalprojectsujin221220.service.LikeService;
 import io.swagger.annotations.Api;
@@ -42,8 +43,9 @@ public class LikeAlarmController {
     //알람기능
     @Operation(summary = "alarm 조회", description = "인증된 user만 자신의 알람(like/comment)을 조회할 수 있습니다.")
     @GetMapping("/alarms")
-    public Response<List<AlarmListResponse>> showAlarms(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        return Response.success(as.showAlarms(pageable, authentication));
+    public Response<AlarmResponse> showAlarms(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        List<AlarmListResponse> response = as.showAlarms(pageable, authentication);
+        return Response.success(new AlarmResponse(response));
     }
 
 
