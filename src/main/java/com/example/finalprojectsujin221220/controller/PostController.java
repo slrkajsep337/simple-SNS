@@ -63,7 +63,7 @@ public class PostController {
     //내 포스트 보기
     @Operation(summary = "my post 조회하기", description = "인증된 user만 자신의 post를 조회할 수 있습니다.")
     @GetMapping("/my")
-    public Response<Page<MyPostListResponse>> showComments(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public Response<Page<MyPostListResponse>> showComments(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         return Response.success(ps.showMyPosts(pageable, authentication));
     }
 
