@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService cs;
-    //test
+
     //코멘트 등록
     @Operation(summary = "comment 등록", description = "인증된 user만 comment를 등록할 수 있습니다.")
     @PostMapping("/posts/{postId}/comments")
