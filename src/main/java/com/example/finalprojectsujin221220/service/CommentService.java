@@ -69,6 +69,7 @@ public class CommentService {
     //코멘트 수정
     public CommentModifyResponse modifyComment(Long postId, Long id, CommentModifyRequest dto, Authentication authentication) {
         User user = validateUser(authentication);
+        validatePost(postId);
         Comment comment = validateComment(id);
         validateAuthority(comment.getUser(), user); //comment를 작성한 유저와 접근(수정)한 유저가 동일한지 확인
 
